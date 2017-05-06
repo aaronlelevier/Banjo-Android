@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, MainFragment.newInstance())
                     .commit();
         }
