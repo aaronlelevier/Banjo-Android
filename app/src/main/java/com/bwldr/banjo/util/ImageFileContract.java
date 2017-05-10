@@ -7,7 +7,7 @@ import java.io.IOException;
  */
 interface ImageFileContract {
 
-    void create(String name, String ext) throws IOException;
+    void create() throws IOException;
 
     void delete();
 

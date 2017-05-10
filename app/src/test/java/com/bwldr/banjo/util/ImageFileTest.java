@@ -63,14 +63,14 @@ public class ImageFileTest {
     public void create_willCreateAnImageFile() throws IOException {
         assertThat(mFileHeper.mImageFile, is(nullValue()));
 
-        mFileHeper.create("Name", "Extension");
+        mFileHeper.create();
 
         assertThat(mFileHeper.mImageFile, is(notNullValue()));
     }
 
     @Test
     public void delete_removesImageFile() throws IOException {
-        mFileHeper.create("Name", "Extension");
+        mFileHeper.create();
 
         assertThat(mFileHeper.mImageFile, is(notNullValue()));
 
@@ -83,7 +83,7 @@ public class ImageFileTest {
     public void exists_returnsBooleanIfFileExists() throws IOException {
         assertFalse(mFileHeper.exists());
 
-        mFileHeper.create("Name", "Extension");
+        mFileHeper.create();
 
         assertTrue(mFileHeper.exists());
     }
