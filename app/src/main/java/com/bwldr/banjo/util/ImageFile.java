@@ -3,6 +3,7 @@ package com.bwldr.banjo.util;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.app.FragmentActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +21,19 @@ public class ImageFile implements ImageFileContract {
 
     @Override
     public void create() throws IOException {
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+
+        mImageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
+    }
+
+    @Override
+    public void createImageFile(FragmentActivity activity) throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         mImageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
     }
@@ -39,7 +49,12 @@ public class ImageFile implements ImageFileContract {
     }
 
     @Override
-    public String getPath() {
-        return Uri.fromFile(mImageFile).toString();
+    public File getFile() {
+        return mImageFile;
+    }
+
+    @Override
+    public Uri getUri() {
+        return Uri.fromFile(mImageFile);
     }
 }
