@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 
+import com.bwldr.banjo.util.Constants;
 import com.bwldr.banjo.util.ImageFile;
 
 import java.io.IOException;
@@ -22,16 +23,12 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void takePicture() throws IOException {
-        FragmentActivity activity = mMainView.getActivity();
-
-//        mImageFile.create();
-        mImageFile.createImageFile(activity);
+    public void takePicture(FragmentActivity activity) throws IOException {
+        mImageFile.create(activity);
 
         Uri photoUri = FileProvider.getUriForFile(
                 activity,
-                // TODO: make a constant
-                "com.bwldr.banjo.provider",
+                Constants.FILE_PROVIDER_PATH,
                 mImageFile.getFile());
 
         mMainView.openCamera(photoUri);

@@ -11,9 +11,7 @@ import java.io.IOException;
  */
 interface ImageFileContract {
 
-    void create() throws IOException;
-
-    void createImageFile(FragmentActivity activity) throws IOException;
+    void create(FragmentActivity activity) throws IOException;
 
     void delete();
 

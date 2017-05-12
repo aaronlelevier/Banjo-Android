@@ -28,44 +28,41 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest({FileProvider.class})
 public class MainPresenterTest {
 
-    @Mock
-    private MainContract.View mMainView;
-
-    @Mock
-    private ImageFile mImageFile;
-
-    @Mock
-    private FragmentActivity mActivity;
-
-    @Mock
-    private File mFile;
-
-    @Mock
-    private Uri mUri;
-
     private MainPresenter mMainPresenter;
+
+    @Mock
+    private MainContract.View mockMainView;
+
+    @Mock
+    private ImageFile mockImageFile;
+
+    @Mock
+    private FragmentActivity mockActivity;
+
+    @Mock
+    private File mockFile;
+
+    @Mock
+    private Uri mockUri;
 
     @Before
     public void setUp() {
         // injects @Mock decorated fields above
         MockitoAnnotations.initMocks(this);
 
-        mMainPresenter = new MainPresenter(mMainView, mImageFile);
+        mMainPresenter = new MainPresenter(mockMainView, mockImageFile);
 
         mockStatic(FileProvider.class);
 
         when(FileProvider.getUriForFile((FragmentActivity)anyObject(), anyString(), (File)anyObject()))
-                .thenReturn(mUri);
-
-        when(mMainView.getActivity())
-                .thenReturn(mActivity);
+                .thenReturn(mockUri);
     }
 
     @Test
     public void takePicture() throws IOException {
-        mMainPresenter.takePicture();
+        mMainPresenter.takePicture(mockActivity);
 
-        verify(mImageFile).createImageFile(mActivity);
-        verify(mMainView).openCamera(mUri);
+        verify(mockImageFile).create(mockActivity);
+        verify(mockMainView).openCamera(mockUri);
     }
 }

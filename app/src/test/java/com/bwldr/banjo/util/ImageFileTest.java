@@ -2,6 +2,7 @@ package com.bwldr.banjo.util;
 
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.FragmentActivity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,13 +32,16 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({Environment.class, File.class})
 public class ImageFileTest {
 
+    private ImageFile mFileHeper;
+
     @Mock
     private File mDirectory;
 
     @Mock
     private File mImageFile;
 
-    private ImageFile mFileHeper;
+    @Mock
+    private FragmentActivity mockActivity;
 
     @Mock
     private Uri mUri;
@@ -63,14 +67,14 @@ public class ImageFileTest {
     public void create_willCreateAnImageFile() throws IOException {
         assertThat(mFileHeper.mImageFile, is(nullValue()));
 
-        mFileHeper.create();
+        mFileHeper.create(mockActivity);
 
         assertThat(mFileHeper.mImageFile, is(notNullValue()));
     }
 
     @Test
     public void delete_removesImageFile() throws IOException {
-        mFileHeper.create();
+        mFileHeper.create(mockActivity);
 
         assertThat(mFileHeper.mImageFile, is(notNullValue()));
 
@@ -83,7 +87,7 @@ public class ImageFileTest {
     public void exists_returnsBooleanIfFileExists() throws IOException {
         assertFalse(mFileHeper.exists());
 
-        mFileHeper.create();
+        mFileHeper.create(mockActivity);
 
         assertTrue(mFileHeper.exists());
     }

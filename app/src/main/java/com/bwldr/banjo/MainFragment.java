@@ -74,7 +74,7 @@ public class MainFragment extends Fragment implements MainContract.View {
 
     private void dispatchTakePictureIntent() {
         try {
-            mMainPresenter.takePicture();
+            mMainPresenter.takePicture(getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }

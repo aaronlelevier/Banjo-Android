@@ -20,17 +20,7 @@ public class ImageFile implements ImageFileContract {
     File mImageFile;
 
     @Override
-    public void create() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-
-        mImageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
-    }
-
-    @Override
-    public void createImageFile(FragmentActivity activity) throws IOException {
+    public void create(FragmentActivity activity) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
