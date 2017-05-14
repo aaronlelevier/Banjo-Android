@@ -14,8 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
+import com.bwldr.banjo.preview.PreviewActivity;
 import com.bwldr.banjo.util.ImageFile;
 import com.bwldr.banjo.util.PermissionUtil;
 
@@ -27,8 +27,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private static final int RC_CAMERA_PERMISSIONS = 2;
 
     private MainPresenter mMainPresenter;
-
-    private boolean mShowPreview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,19 +56,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 }
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mShowPreview) {
-            // swap out the default fragment for this view w/ the image preview fragment
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, PreviewFragment.newInstance())
-                    .addToBackStack(null)
-                    .commit();
-        }
-        mShowPreview = false;
     }
 
     @Override
@@ -125,13 +110,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            mShowPreview = true;
+            Intent intent = new Intent(this, PreviewActivity.class);
+            intent.setData(mMainPresenter.getImageFileUri());
+            startActivity(intent);
         }
-    }
-
-    @Override
-    public void setPreviewImage() {
-        ((ImageView) findViewById(R.id.image))
-                .setImageURI(mMainPresenter.getImageFileUri());
     }
 }

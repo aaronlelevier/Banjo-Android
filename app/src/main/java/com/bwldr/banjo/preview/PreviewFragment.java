@@ -1,16 +1,22 @@
-package com.bwldr.banjo;
+package com.bwldr.banjo.preview;
 
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.bwldr.banjo.R;
 
 /**
- * Show image preview
+ * A placeholder fragment containing a simple view.
  */
 public class PreviewFragment extends Fragment {
+
+    public PreviewFragment() {
+    }
 
     public static PreviewFragment newInstance() {
         return new PreviewFragment();
@@ -19,14 +25,12 @@ public class PreviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_preview, container, false);
-    }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_preview, container, false);
 
-        ((MainActivity) getActivity())
-                .setPreviewImage();
+        Uri photoUri = Uri.parse(getArguments().getString("data"));
+        ((ImageView) view.findViewById(R.id.image)).setImageURI(photoUri);
+
+        return view;
     }
 }

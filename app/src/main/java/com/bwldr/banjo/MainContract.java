@@ -14,7 +14,6 @@ public class MainContract {
     interface View {
         void openCamera(Uri uri);
 
-        void setPreviewImage();
     }
 
     interface Presenter {
