@@ -12,8 +12,9 @@ import java.io.IOException;
 public class MainContract {
 
     interface View {
-        void openCamera(Uri uri);
+        void dispatchTakePictureIntent();
 
+        void openCamera(Uri uri);
     }
 
     interface Presenter {
