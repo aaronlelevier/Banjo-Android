@@ -47,7 +47,6 @@ public class MainPresenterTest {
 
     @Before
     public void setUp() {
-        // injects @Mock decorated fields above
         MockitoAnnotations.initMocks(this);
 
         mMainPresenter = new MainPresenter(mockMainView, mockImageFile);

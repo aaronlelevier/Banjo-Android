@@ -6,9 +6,8 @@ import android.support.v4.app.FragmentActivity;
 import java.io.IOException;
 
 /**
- * Interfaces to be followed by the View and Presenter
+ * Interfaces to be followed by the Main View and Presenter
  */
-
 public class MainContract {
 
     interface View {

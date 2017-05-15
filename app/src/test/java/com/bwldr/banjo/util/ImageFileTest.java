@@ -32,63 +32,63 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({Environment.class, File.class})
 public class ImageFileTest {
 
-    private ImageFile mFileHeper;
+    private ImageFile mFileHelper;
 
     @Mock
-    private File mDirectory;
+    private File mockDirectory;
 
     @Mock
-    private File mImageFile;
+    private File mockImageFile;
 
     @Mock
     private FragmentActivity mockActivity;
 
     @Mock
-    private Uri mUri;
+    private Uri mockUri;
 
     @Before
     public void createImageFile() throws IOException {
         // get a ref to class under test
-        mFileHeper = new ImageFile();
+        mFileHelper = new ImageFile();
 
         // setup mocking for these 2 classes' static methods
         mockStatic(Environment.class, File.class);
 
         // make the Environment class return the mocked external storage dir
         when(Environment.getExternalStorageDirectory())
-                .thenReturn(mDirectory);
+                .thenReturn(mockDirectory);
 
         // make the File class return the mocked file
-        when(File.createTempFile(anyString(), anyString(), eq(mDirectory)))
-                .thenReturn(mImageFile);
+        when(File.createTempFile(anyString(), anyString(), eq(mockDirectory)))
+                .thenReturn(mockImageFile);
     }
 
     @Test
     public void create_willCreateAnImageFile() throws IOException {
-        assertThat(mFileHeper.mImageFile, is(nullValue()));
+        assertThat(mFileHelper.mImageFile, is(nullValue()));
 
-        mFileHeper.create(mockActivity);
+        mFileHelper.create(mockActivity);
 
-        assertThat(mFileHeper.mImageFile, is(notNullValue()));
+        assertThat(mFileHelper.mImageFile, is(notNullValue()));
     }
 
     @Test
     public void delete_removesImageFile() throws IOException {
-        mFileHeper.create(mockActivity);
+        mFileHelper.create(mockActivity);
 
-        assertThat(mFileHeper.mImageFile, is(notNullValue()));
+        assertThat(mFileHelper.mImageFile, is(notNullValue()));
 
-        mFileHeper.delete();
+        mFileHelper.delete();
 
-        assertThat(mFileHeper.mImageFile, is(nullValue()));
+        assertThat(mFileHelper.mImageFile, is(nullValue()));
     }
 
     @Test
     public void exists_returnsBooleanIfFileExists() throws IOException {
-        assertFalse(mFileHeper.exists());
+        assertFalse(mFileHelper.exists());
 
-        mFileHeper.create(mockActivity);
+        mFileHelper.create(mockActivity);
 
-        assertTrue(mFileHeper.exists());
+        assertTrue(mFileHelper.exists());
     }
 }

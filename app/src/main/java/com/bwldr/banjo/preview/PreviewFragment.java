@@ -28,8 +28,6 @@ public class PreviewFragment extends Fragment {
 
     private static final String TAG = PreviewFragment.class.getSimpleName();
 
-    private Button mSaveButton;
-
     public PreviewFragment() {
     }
 
@@ -46,8 +44,8 @@ public class PreviewFragment extends Fragment {
         final Uri photoUri = Uri.parse(getArguments().getString("data"));
         ((ImageView) view.findViewById(R.id.image)).setImageURI(photoUri);
 
-        mSaveButton = (Button) view.findViewById(R.id.button);
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
+        Button saveButton = (Button) view.findViewById(R.id.button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 broadcastNewFile(photoUri);
@@ -78,21 +76,11 @@ public class PreviewFragment extends Fragment {
         );
     }
 
-    private File getFileFromUri(Uri uri) {
-        String fileName = uri.getLastPathSegment();
-        File picturesDir =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File outputDir = new File(picturesDir, getActivity().getString(R.string.app_name));
-        return new File(outputDir, fileName);
-    }
-
     private void copyFiletoProtoDir(String inputPath, String outputPath) {
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            //create output directory if it doesn't exist
-            getPhotoDirectory();
+        InputStream in;
+        OutputStream out;
 
+        try {
             in = new FileInputStream(inputPath);
             out = new FileOutputStream(outputPath);
 
@@ -117,7 +105,13 @@ public class PreviewFragment extends Fragment {
         }
     }
 
-    private File getPhotoDirectory() {
+    private File getFileFromUri(Uri uri) {
+        String fileName = uri.getLastPathSegment();
+        File outputDir = getOrCreatePhotoDirectory();
+        return new File(outputDir, fileName);
+    }
+
+    private File getOrCreatePhotoDirectory() {
         File outputDir = null;
         String externalStorageState = Environment.getExternalStorageState();
         if (externalStorageState.equals(Environment.MEDIA_MOUNTED)) {

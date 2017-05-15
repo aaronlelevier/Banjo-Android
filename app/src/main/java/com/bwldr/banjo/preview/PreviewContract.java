@@ -1,8 +1,18 @@
 package com.bwldr.banjo.preview;
 
-/**
- * Created by aaron on 5/14/17.
- */
+import android.support.v4.app.FragmentActivity;
 
+import java.io.File;
+
+/**
+ * Interfaces to be followed by the Preview View and Presenter
+ */
 public class PreviewContract {
+
+    interface View {
+    }
+
+    interface Presenter {
+        File getOrCreatePhotoDirectory(FragmentActivity activity);
+    }
 }

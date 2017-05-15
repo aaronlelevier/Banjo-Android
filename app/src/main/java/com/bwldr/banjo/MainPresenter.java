@@ -14,11 +14,11 @@ import java.io.IOException;
  */
 public class MainPresenter implements MainContract.Presenter {
 
-    private final MainContract.View mMainView;
+    private final MainContract.View mView;
     private final ImageFile mImageFile;
 
     public MainPresenter(MainContract.View mainView, ImageFile imageFile) {
-        mMainView = mainView;
+        mView = mainView;
         mImageFile = imageFile;
     }
 
@@ -31,7 +31,7 @@ public class MainPresenter implements MainContract.Presenter {
                 Constants.FILE_PROVIDER_PATH,
                 mImageFile.getFile());
 
-        mMainView.openCamera(photoUri);
+        mView.openCamera(photoUri);
     }
 
     Uri getImageFileUri() {
