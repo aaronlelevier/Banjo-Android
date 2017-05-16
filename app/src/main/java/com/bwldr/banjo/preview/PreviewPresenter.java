@@ -1,5 +1,6 @@
 package com.bwldr.banjo.preview;
 
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 
@@ -13,6 +14,22 @@ public class PreviewPresenter implements PreviewContract.Presenter {
 
     public PreviewPresenter(PreviewContract.View view) {
         mView = view;
+    }
+
+    @Override
+    public void broadcastNewFile(FragmentActivity activity, Uri uri) {
+//        File inputFile = new File(uri.getPath());
+//        String inputPath = inputFile.getAbsolutePath();
+        File outputFile = getFileFromUri(activity, uri);
+//        String outputPath = outputFile.getPath();
+
+    }
+
+    @Override
+    public File getFileFromUri(FragmentActivity activity, Uri uri) {
+        String fileName = uri.getLastPathSegment();
+        File outputDir = getOrCreatePhotoDirectory(activity);
+        return new File(outputDir, fileName);
     }
 
     @Override

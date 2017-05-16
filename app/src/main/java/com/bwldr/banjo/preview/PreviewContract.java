@@ -1,5 +1,6 @@
 package com.bwldr.banjo.preview;
 
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 
 import java.io.File;
@@ -13,6 +14,10 @@ public class PreviewContract {
     }
 
     interface Presenter {
+        void broadcastNewFile(FragmentActivity activity, Uri uri);
+
+        File getFileFromUri(FragmentActivity activity, Uri uri);
+
         File getOrCreatePhotoDirectory(FragmentActivity activity);
     }
 }

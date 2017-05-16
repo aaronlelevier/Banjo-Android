@@ -1,6 +1,7 @@
 package com.bwldr.banjo.preview;
 
 
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -36,6 +38,9 @@ public class PreviewPresenterTest {
 
     @Mock
     private FragmentActivity mockActivity;
+
+    @Mock
+    private Uri mockUri;
 
     @Mock
     private File mockPhotoDir;
@@ -66,6 +71,22 @@ public class PreviewPresenterTest {
         } catch (Exception e) {
             throw new AssertionError("new File(..) mock failed");
         }
+    }
+
+    @Test
+    public void broadcastNewFile() {
+        PreviewPresenter spyPresenter = spy(new PreviewPresenter(mockMainView));
+
+        spyPresenter.broadcastNewFile(mockActivity, mockUri);
+
+        verify(spyPresenter).getFileFromUri(mockActivity, mockUri);
+    }
+
+    @Test
+    public void getFileFromUri() {
+        File ret = mPreviewPresenter.getFileFromUri(mockActivity, mockUri);
+
+        assertTrue(ret != null);
     }
 
     @Test
