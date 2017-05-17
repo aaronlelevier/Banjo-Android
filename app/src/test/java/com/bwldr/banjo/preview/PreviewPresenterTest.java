@@ -1,6 +1,7 @@
 package com.bwldr.banjo.preview;
 
 
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
@@ -14,9 +15,12 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -28,7 +32,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({PreviewPresenter.class, Environment.class, File.class})
+@PrepareForTest({PreviewPresenter.class, Environment.class, File.class, FileInputStream.class,
+        FileOutputStream.class, MediaScannerConnection.class})
 public class PreviewPresenterTest {
 
     private PreviewPresenter mPreviewPresenter;
@@ -47,6 +52,12 @@ public class PreviewPresenterTest {
 
     @Mock
     private File mockOutputDir;
+
+    @Mock
+    private FileInputStream mockFileInputStream;
+
+    @Mock
+    private FileOutputStream mockFileOutputStream;
 
     @Before
     public void setUp() {
@@ -75,11 +86,23 @@ public class PreviewPresenterTest {
 
     @Test
     public void broadcastNewFile() {
+        try {
+            whenNew(FileInputStream.class).withAnyArguments()
+                    .thenReturn(mockFileInputStream);
+            when(mockFileInputStream.read((byte[])anyObject()))
+                    .thenReturn(-1);
+            whenNew(FileOutputStream.class).withAnyArguments()
+                    .thenReturn(mockFileOutputStream);
+            mockStatic(MediaScannerConnection.class);
+        } catch (Exception e) {
+            throw new AssertionError("new FileInputStream(..) mock failed");
+        }
         PreviewPresenter spyPresenter = spy(new PreviewPresenter(mockMainView));
 
         spyPresenter.broadcastNewFile(mockActivity, mockUri);
 
         verify(spyPresenter).getFileFromUri(mockActivity, mockUri);
+        verify(spyPresenter).copyFileToProtoDir(anyString(), anyString());
     }
 
     @Test

@@ -17,7 +17,6 @@ public class PreviewActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             Uri photoUri = getIntent().getData();
             bundle.putString("data", photoUri.toString());
-
             PreviewFragment fragment = PreviewFragment.newInstance();
             fragment.setArguments(bundle);
 

@@ -16,6 +16,8 @@ public class PreviewContract {
     interface Presenter {
         void broadcastNewFile(FragmentActivity activity, Uri uri);
 
+        void copyFileToProtoDir(String inputPath, String outputPath);
+
         File getFileFromUri(FragmentActivity activity, Uri uri);
 
         File getOrCreatePhotoDirectory(FragmentActivity activity);
