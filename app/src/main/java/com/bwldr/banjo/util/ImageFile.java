@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +27,8 @@ public class ImageFile implements ImageFileContract {
         File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         mImageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
+        // delete temp file once VM terminates
+        mImageFile.deleteOnExit();
     }
 
     @Override
