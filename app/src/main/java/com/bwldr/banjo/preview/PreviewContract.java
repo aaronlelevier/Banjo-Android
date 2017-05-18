@@ -11,6 +11,7 @@ import java.io.File;
 public class PreviewContract {
 
     interface View {
+        void showToast(String text);
     }
 
     interface Presenter {

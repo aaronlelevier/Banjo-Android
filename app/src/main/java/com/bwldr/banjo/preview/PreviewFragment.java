@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bwldr.banjo.R;
+import com.bwldr.banjo.util.Util;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -52,5 +53,10 @@ public class PreviewFragment extends Fragment implements PreviewContract.View {
         });
 
         return view;
+    }
+
+    @Override
+    public void showToast(String text) {
+        Util.showToast(getActivity(), text);
     }
 }

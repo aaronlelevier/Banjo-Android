@@ -24,7 +24,7 @@ public class PreviewPresenter implements PreviewContract.Presenter {
     }
 
     @Override
-    public void broadcastNewFile(FragmentActivity activity, Uri uri) {
+    public void broadcastNewFile(final FragmentActivity activity, Uri uri) {
         File inputFile = new File(uri.getPath());
         String inputPath = inputFile.getAbsolutePath();
         File outputFile = getFileFromUri(activity, uri);
@@ -39,6 +39,7 @@ public class PreviewPresenter implements PreviewContract.Presenter {
                 new MediaScannerConnection.OnScanCompletedListener() {
                     @Override
                     public void onScanCompleted(String s, Uri uri) {
+                        mView.showToast(activity.getString(R.string.image_saved));
                     }
                 }
         );
