@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.bwldr.banjo.R;
@@ -17,8 +17,6 @@ import com.bwldr.banjo.util.Util;
  * A placeholder fragment containing a simple view.
  */
 public class PreviewFragment extends Fragment implements PreviewContract.View {
-
-    private static final String TAG = PreviewFragment.class.getSimpleName();
 
     private PreviewContract.Presenter mPresenter;
 
@@ -44,7 +42,7 @@ public class PreviewFragment extends Fragment implements PreviewContract.View {
         final Uri photoUri = Uri.parse(getArguments().getString("data"));
         ((ImageView) view.findViewById(R.id.image)).setImageURI(photoUri);
 
-        Button saveButton = (Button) view.findViewById(R.id.button);
+        ImageButton saveButton = (ImageButton) view.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
