@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class MainFragment extends Fragment implements MainContract.View {
     private static final int RC_IMAGE_CAPTURE = 1;
     private static final int RC_CAMERA_PERMISSIONS = 2;
 
-    private MainPresenter mMainPresenter;
+    private MainPresenter mPresenter;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -62,7 +63,7 @@ public class MainFragment extends Fragment implements MainContract.View {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mMainPresenter = new MainPresenter(this, new ImageFile());
+        mPresenter = new MainPresenter(this, new ImageFile());
     }
 
     @Override
@@ -78,17 +79,23 @@ public class MainFragment extends Fragment implements MainContract.View {
     @Override
     public void dispatchTakePictureIntent() {
         try {
-            mMainPresenter.takePicture(getActivity());
+            mPresenter.takePicture();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void openCamera(Uri uri) {
+    public void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+            Uri photoUri = FileProvider.getUriForFile(
+                    getActivity(),
+                    getActivity().getApplicationContext().getPackageName() + ".provider",
+                    mPresenter.getFile());
+
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(takePictureIntent, RC_IMAGE_CAPTURE);
         }
     }
@@ -97,7 +104,7 @@ public class MainFragment extends Fragment implements MainContract.View {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Intent intent = new Intent(getActivity(), PreviewActivity.class);
-            intent.setData(mMainPresenter.getImageFileUri());
+            intent.setData(mPresenter.getUri());
             startActivity(intent);
         }
     }
