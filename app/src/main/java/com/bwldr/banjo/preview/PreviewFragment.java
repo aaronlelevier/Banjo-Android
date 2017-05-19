@@ -1,5 +1,6 @@
 package com.bwldr.banjo.preview;
 
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,11 +47,32 @@ public class PreviewFragment extends Fragment implements PreviewContract.View {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.broadcastNewFile(getActivity(), photoUri);
+                mPresenter.broadcastNewFile(photoUri);
             }
         });
 
         return view;
+    }
+
+    /**
+     * Broadcast that a new image has been saved to other apps
+     *
+     * @param filePath of new image file to broadcast
+     */
+    @Override
+    public void scanFileWithMediaScanner(String filePath) {
+        MediaScannerConnection.scanFile(
+                getActivity(),
+                new String[]{filePath},
+                null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    @Override
+                    public void onScanCompleted(String s, Uri uri) {
+                        showToast(getActivity().getString(R.string.image_saved));
+                    }
+                }
+        );
+
     }
 
     @Override

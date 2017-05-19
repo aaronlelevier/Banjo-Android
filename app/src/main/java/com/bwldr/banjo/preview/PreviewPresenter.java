@@ -1,12 +1,9 @@
 package com.bwldr.banjo.preview;
 
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
-import com.bwldr.banjo.R;
+import com.bwldr.banjo.util.Constants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,25 +21,15 @@ public class PreviewPresenter implements PreviewContract.Presenter {
     }
 
     @Override
-    public void broadcastNewFile(final FragmentActivity activity, Uri uri) {
+    public void broadcastNewFile(Uri uri) {
         File inputFile = new File(uri.getPath());
         String inputPath = inputFile.getAbsolutePath();
-        File outputFile = getFileFromUri(activity, uri);
+        File outputFile = getFileFromUri(uri);
         String outputPath = outputFile.getPath();
 
         copyFileToProtoDir(inputPath, outputPath);
 
-        MediaScannerConnection.scanFile(
-                activity,
-                new String[]{outputFile.getPath()},
-                null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    @Override
-                    public void onScanCompleted(String s, Uri uri) {
-                        mView.showToast(activity.getString(R.string.image_saved));
-                    }
-                }
-        );
+        mView.scanFileWithMediaScanner(outputPath);
     }
 
     @Override
@@ -68,25 +55,25 @@ public class PreviewPresenter implements PreviewContract.Presenter {
             out = null;
 
         } catch (IOException e) {
-            Log.e("tag", e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @Override
-    public File getFileFromUri(FragmentActivity activity, Uri uri) {
+    public File getFileFromUri(Uri uri) {
         String fileName = uri.getLastPathSegment();
-        File outputDir = getOrCreatePhotoDirectory(activity);
+        File outputDir = getOrCreatePhotoDirectory();
         return new File(outputDir, fileName);
     }
 
     @Override
-    public File getOrCreatePhotoDirectory(FragmentActivity activity) {
+    public File getOrCreatePhotoDirectory() {
         File outputDir = null;
         String externalStorageState = Environment.getExternalStorageState();
         if (externalStorageState.equals(Environment.MEDIA_MOUNTED)) {
             File picturesDir =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            outputDir = new File(picturesDir, activity.getString(R.string.app_name));
+            outputDir = new File(picturesDir, Constants.APP_NAME);
             if (!outputDir.exists()) {
                 if (!outputDir.mkdirs()) {
                     outputDir = null;

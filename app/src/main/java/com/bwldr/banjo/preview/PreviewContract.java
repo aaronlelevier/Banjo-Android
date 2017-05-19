@@ -1,7 +1,6 @@
 package com.bwldr.banjo.preview;
 
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 
 import java.io.File;
 
@@ -12,15 +11,17 @@ public class PreviewContract {
 
     interface View {
         void showToast(String text);
+
+        void scanFileWithMediaScanner(String filePath);
     }
 
     interface Presenter {
-        void broadcastNewFile(FragmentActivity activity, Uri uri);
+        void broadcastNewFile(Uri uri);
 
         void copyFileToProtoDir(String inputPath, String outputPath);
 
-        File getFileFromUri(FragmentActivity activity, Uri uri);
+        File getFileFromUri(Uri uri);
 
-        File getOrCreatePhotoDirectory(FragmentActivity activity);
+        File getOrCreatePhotoDirectory();
     }
 }

@@ -1,10 +1,8 @@
 package com.bwldr.banjo.preview;
 
 
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,17 +30,14 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({PreviewPresenter.class, Environment.class, File.class, FileInputStream.class,
-        FileOutputStream.class, MediaScannerConnection.class})
+@PrepareForTest({PreviewPresenter.class, Environment.class, File.class,
+        FileInputStream.class, FileOutputStream.class})
 public class PreviewPresenterTest {
 
     private PreviewPresenter mPreviewPresenter;
 
     @Mock
     private PreviewContract.View mockMainView;
-
-    @Mock
-    private FragmentActivity mockActivity;
 
     @Mock
     private Uri mockUri;
@@ -93,28 +88,28 @@ public class PreviewPresenterTest {
                     .thenReturn(-1);
             whenNew(FileOutputStream.class).withAnyArguments()
                     .thenReturn(mockFileOutputStream);
-            mockStatic(MediaScannerConnection.class);
         } catch (Exception e) {
             throw new AssertionError("new FileInputStream(..) mock failed");
         }
         PreviewPresenter spyPresenter = spy(new PreviewPresenter(mockMainView));
 
-        spyPresenter.broadcastNewFile(mockActivity, mockUri);
+        spyPresenter.broadcastNewFile(mockUri);
 
-        verify(spyPresenter).getFileFromUri(mockActivity, mockUri);
+        verify(spyPresenter).getFileFromUri(mockUri);
         verify(spyPresenter).copyFileToProtoDir(anyString(), anyString());
+        verify(mockMainView).scanFileWithMediaScanner(anyString());
     }
 
     @Test
     public void getFileFromUri() {
-        File ret = mPreviewPresenter.getFileFromUri(mockActivity, mockUri);
+        File ret = mPreviewPresenter.getFileFromUri(mockUri);
 
         assertTrue(ret != null);
     }
 
     @Test
     public void getOrCreatePhotoDirectory_getExternalStorageState() {
-        File ret = mPreviewPresenter.getOrCreatePhotoDirectory(mockActivity);
+        File ret = mPreviewPresenter.getOrCreatePhotoDirectory();
 
         verifyStatic();
         Environment.getExternalStorageState();
@@ -132,7 +127,7 @@ public class PreviewPresenterTest {
         when(Environment.getExternalStorageState())
                 .thenReturn("not mounted");
 
-        assertEquals(null, mPreviewPresenter.getOrCreatePhotoDirectory(mockActivity));
+        assertEquals(null, mPreviewPresenter.getOrCreatePhotoDirectory());
 
         verifyStatic();
         Environment.getExternalStorageState();
@@ -145,7 +140,7 @@ public class PreviewPresenterTest {
         when(mockOutputDir.mkdirs())
                 .thenReturn(true);
 
-        File ret = mPreviewPresenter.getOrCreatePhotoDirectory(mockActivity);
+        File ret = mPreviewPresenter.getOrCreatePhotoDirectory();
 
         verify(mockOutputDir).exists();
         verify(mockOutputDir).mkdirs();
@@ -159,7 +154,7 @@ public class PreviewPresenterTest {
         when(mockOutputDir.mkdirs())
                 .thenReturn(false);
 
-        File ret = mPreviewPresenter.getOrCreatePhotoDirectory(mockActivity);
+        File ret = mPreviewPresenter.getOrCreatePhotoDirectory();
 
         verify(mockOutputDir).exists();
         verify(mockOutputDir).mkdirs();
