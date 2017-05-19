@@ -61,7 +61,7 @@ public class MainPresenterTest {
     public void takePicture() throws IOException {
         mMainPresenter.takePicture(mockActivity);
 
-        verify(mockImageFile).create(mockActivity);
+        verify(mockImageFile).create();
         verify(mockMainView).openCamera(mockUri);
     }
 }

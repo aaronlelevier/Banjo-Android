@@ -1,7 +1,6 @@
 package com.bwldr.banjo.util;
 
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.io.IOException;
  */
 interface ImageFileContract {
 
-    void create(FragmentActivity activity) throws IOException;
+    void create() throws IOException;
 
     void delete();
 

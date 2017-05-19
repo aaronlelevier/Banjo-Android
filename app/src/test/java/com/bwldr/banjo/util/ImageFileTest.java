@@ -2,7 +2,6 @@ package com.bwldr.banjo.util;
 
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,9 +40,6 @@ public class ImageFileTest {
     private File mockImageFile;
 
     @Mock
-    private FragmentActivity mockActivity;
-
-    @Mock
     private Uri mockUri;
 
     @Before
@@ -67,14 +63,14 @@ public class ImageFileTest {
     public void create_willCreateAnImageFile() throws IOException {
         assertThat(mFileHelper.mImageFile, is(nullValue()));
 
-        mFileHelper.create(mockActivity);
+        mFileHelper.create();
 
         assertThat(mFileHelper.mImageFile, is(notNullValue()));
     }
 
     @Test
     public void delete_removesImageFile() throws IOException {
-        mFileHelper.create(mockActivity);
+        mFileHelper.create();
 
         assertThat(mFileHelper.mImageFile, is(notNullValue()));
 
@@ -87,7 +83,7 @@ public class ImageFileTest {
     public void exists_returnsBooleanIfFileExists() throws IOException {
         assertFalse(mFileHelper.exists());
 
-        mFileHelper.create(mockActivity);
+        mFileHelper.create();
 
         assertTrue(mFileHelper.exists());
     }

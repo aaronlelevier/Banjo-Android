@@ -24,7 +24,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void takePicture(FragmentActivity activity) throws IOException {
-        mImageFile.create(activity);
+        mImageFile.create();
 
         Uri photoUri = FileProvider.getUriForFile(
                 activity,
