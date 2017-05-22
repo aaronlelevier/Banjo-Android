@@ -3,6 +3,9 @@ package com.bwldr.banjo.preview;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,7 +22,12 @@ import com.bwldr.banjo.util.Util;
  */
 public class PreviewFragment extends Fragment implements PreviewContract.View {
 
+    private static final int MSG_SAVE_PHOTO = 0;
+    private static final int MSG_SHUTDOWN = 1;
+
     private PreviewContract.Presenter mPresenter;
+    private Uri mPhotoUri;
+    private SavePhotoThread mSavePhotoThread;
 
     public PreviewFragment() {
     }
@@ -29,9 +37,11 @@ public class PreviewFragment extends Fragment implements PreviewContract.View {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mPresenter = new PreviewPresenter(this);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mSavePhotoThread = new SavePhotoThread("SavePhotoThread");
+        mSavePhotoThread.start();
     }
 
     @Override
@@ -40,18 +50,36 @@ public class PreviewFragment extends Fragment implements PreviewContract.View {
 
         View view = inflater.inflate(R.layout.fragment_preview, container, false);
 
-        final Uri photoUri = Uri.parse(getArguments().getString("data"));
-        ((ImageView) view.findViewById(R.id.image)).setImageURI(photoUri);
+        mPhotoUri = Uri.parse(getArguments().getString("data"));
+        ((ImageView) view.findViewById(R.id.image)).setImageURI(mPhotoUri);
 
         ImageButton saveButton = (ImageButton) view.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.broadcastNewFile(photoUri);
+                mSavePhotoThread.mWorkerHandler.obtainMessage(MSG_SAVE_PHOTO)
+                        .sendToTarget();
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mPresenter = new PreviewPresenter(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        mSavePhotoThread.mWorkerHandler.obtainMessage(MSG_SHUTDOWN);
+        try {
+            mSavePhotoThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
     }
 
     /**
@@ -72,11 +100,34 @@ public class PreviewFragment extends Fragment implements PreviewContract.View {
                     }
                 }
         );
-
     }
 
     @Override
     public void showToast(String text) {
         Util.showToast(getActivity(), text);
+    }
+
+    private class SavePhotoThread extends HandlerThread implements Handler.Callback {
+
+        Handler mWorkerHandler;
+
+        public SavePhotoThread(String name) {
+            super(name);
+        }
+
+        @Override
+        protected void onLooperPrepared() {
+            mWorkerHandler = new Handler(getLooper(), this);
+        }
+
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_SAVE_PHOTO:
+                    mPresenter.saveAndBroadcastNewPhoto(mPhotoUri);
+                    break;
+            }
+            return true;
+        }
     }
 }

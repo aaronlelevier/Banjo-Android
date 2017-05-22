@@ -21,7 +21,7 @@ public class PreviewPresenter implements PreviewContract.Presenter {
     }
 
     @Override
-    public void broadcastNewFile(Uri uri) {
+    public void saveAndBroadcastNewPhoto(Uri uri) {
         File inputFile = new File(uri.getPath());
         String inputPath = inputFile.getAbsolutePath();
         File outputFile = getFileFromUri(uri);

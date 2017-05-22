@@ -16,7 +16,7 @@ public class PreviewContract {
     }
 
     interface Presenter {
-        void broadcastNewFile(Uri uri);
+        void saveAndBroadcastNewPhoto(Uri uri);
 
         void copyFileToProtoDir(String inputPath, String outputPath);
 

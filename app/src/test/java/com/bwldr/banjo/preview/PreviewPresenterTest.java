@@ -93,7 +93,7 @@ public class PreviewPresenterTest {
         }
         PreviewPresenter spyPresenter = spy(new PreviewPresenter(mockMainView));
 
-        spyPresenter.broadcastNewFile(mockUri);
+        spyPresenter.saveAndBroadcastNewPhoto(mockUri);
 
         verify(spyPresenter).getFileFromUri(mockUri);
         verify(spyPresenter).copyFileToProtoDir(anyString(), anyString());
