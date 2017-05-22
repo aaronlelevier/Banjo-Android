@@ -62,6 +62,14 @@ public class PreviewFragment extends Fragment implements PreviewContract.View {
             }
         });
 
+        ImageButton cancelButton = (ImageButton) view.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+
         return view;
     }
 
