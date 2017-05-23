@@ -1,5 +1,6 @@
 package com.bwldr.banjo.preview;
 
+import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -67,6 +68,17 @@ public class PreviewFragment extends Fragment implements PreviewContract.View {
             @Override
             public void onClick(View v) {
                 getActivity().finish();
+            }
+        });
+
+        ImageButton shareButton = (ImageButton) view.findViewById(R.id.share_button);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("image/jpeg");
+                intent.putExtra(Intent.EXTRA_STREAM, mPhotoUri);
+                startActivity(Intent.createChooser(intent, "Share Image"));
             }
         });
 
